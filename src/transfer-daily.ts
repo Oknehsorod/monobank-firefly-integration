@@ -22,7 +22,6 @@ dayjs.extend(dayjsTimezonePlugin);
 (async () => {
   const currentDay = dayjs
     .tz(new Date(), 'Europe/Kyiv')
-    .subtract(1, 'day')
     .endOf('day');
   const startOfCurrentDay = currentDay.startOf('day');
 
