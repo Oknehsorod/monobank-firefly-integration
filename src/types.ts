@@ -13,3 +13,28 @@ export interface Statement {
   hold: boolean;
   receiptId: string;
 }
+
+export interface TransationBody {
+  from: string;
+  to: string;
+  amount: string;
+  date: Date;
+  type: 'withdrawal' | 'deposit';
+  description: string;
+}
+
+export enum DestinationAccounts {
+  Medicine = 'Medicine',
+  Taxi = 'Taxi',
+  Cosmetics = 'Cosmetics',
+  Clothes = 'Clothes',
+  Services = 'Services',
+  Games = 'Games',
+  Building = 'Building',
+  Food = 'Food',
+}
+
+export interface PromptDestinationAnswers {
+  value: string;
+  isNeedToBeSaved: boolean;
+}

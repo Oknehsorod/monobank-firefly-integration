@@ -1,9 +1,9 @@
-import { Statement } from './types';
+import { Statement, TransationBody } from './types';
 
 export const fetchStatements = (from: Date, to: Date): Promise<Statement[]> =>
   fetch(
     new URL(
-      `/personal/statement/0/${+from}/${+to}`,
+      `/personal/statement/${process.env.MONOBANK_ACCOUNT}/${+from}/${+to}`,
       process.env.MONOBANK_API_HOST,
     ).toString(),
     {
@@ -13,12 +13,14 @@ export const fetchStatements = (from: Date, to: Date): Promise<Statement[]> =>
     },
   ).then((res) => res.json());
 
-export const createTransaction = (
-  description: string,
-  to: string,
-  amount: string,
-  date: Date,
-) =>
+export const createTransaction = ({
+  date,
+  amount,
+  from,
+  to,
+  description,
+  type,
+}: TransationBody) =>
   fetch(
     new URL('/api/v1/transactions', process.env.FIREFLY_API_HOST).toString(),
     {
@@ -32,14 +34,14 @@ export const createTransaction = (
         apply_rules: true,
         transactions: [
           {
-            type: 'withdrawal',
+            type,
             date: date.toISOString(),
             amount,
             description,
-            source_name: 'Monobank [UAH]',
+            source_name: from,
             destination_name: to,
           },
         ],
       }),
     },
-  ).then((res) => res.json());
+  );

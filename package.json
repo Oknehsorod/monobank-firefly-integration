@@ -10,12 +10,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/prompt-sync": "^4.2.3",
     "dotenv": "^16.4.5",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "dayjs": "^1.11.10"
+    "chalk": "^4.1.2",
+    "currency-codes": "^2.1.0",
+    "dayjs": "^1.11.10",
+    "prompt-sync": "^4.2.0"
   }
 }
