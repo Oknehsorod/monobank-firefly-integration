@@ -23,17 +23,6 @@ export interface TransationBody {
   description: string;
 }
 
-export enum DestinationAccounts {
-  Medicine = 'Medicine',
-  Taxi = 'Taxi',
-  Cosmetics = 'Cosmetics',
-  Clothes = 'Clothes',
-  Services = 'Services',
-  Games = 'Games',
-  Building = 'Building',
-  Food = 'Food',
-}
-
 export interface PromptDestinationAnswers {
   value: string;
   isNeedToBeSaved: boolean;

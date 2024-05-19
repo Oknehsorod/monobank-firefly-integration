@@ -4,9 +4,16 @@ import dayjsTimezonePlugin from 'dayjs/plugin/timezone';
 import dotenv from 'dotenv';
 import { fsStorage } from './classes/FSStorage';
 
-import { fetchStatements, createTransaction } from './api';
+import {
+  fetchStatements,
+  createTransaction,
+  fetchCurrentFireflyBalance,
+  fetchCurrentMonobankBalance,
+} from './api';
 import {
   logFailedTransaction,
+  logFireflyBalance,
+  logMonobankBalance,
   logMonobankTransactionDeposit,
   logMonobankTransactionWithdrawal,
   logSuccessfullTransaction,
@@ -20,9 +27,7 @@ dayjs.extend(dayjsUTCPlugin);
 dayjs.extend(dayjsTimezonePlugin);
 
 (async () => {
-  const currentDay = dayjs
-    .tz(new Date(), 'Europe/Kyiv')
-    .endOf('day');
+  const currentDay = dayjs.tz(new Date(), 'Europe/Kyiv').endOf('day');
   const startOfCurrentDay = currentDay.startOf('day');
 
   let savedTransactions = fsStorage.get<string[]>('savedTransaction') ?? [];
@@ -51,7 +56,9 @@ dayjs.extend(dayjsTimezonePlugin);
       : savedFrom[description];
 
     if (!from) {
-      const { value, isNeedToBeSaved } = promptFrom();
+      const fromAnswer = promptFrom();
+      if (!fromAnswer) continue;
+      const { value, isNeedToBeSaved } = fromAnswer;
       from = value;
       if (isNeedToBeSaved) {
         fsStorage.set('savedFrom', { ...savedFrom, [description]: from });
@@ -64,7 +71,9 @@ dayjs.extend(dayjsTimezonePlugin);
       : savedTo[description];
 
     if (!to) {
-      const { value, isNeedToBeSaved } = promptTo();
+      const toAnswer = promptTo();
+      if (!toAnswer) continue;
+      const { value, isNeedToBeSaved } = toAnswer;
       to = value;
       if (isNeedToBeSaved) {
         fsStorage.set('savedTo', { ...savedTo, [description]: to });
@@ -85,6 +94,12 @@ dayjs.extend(dayjsTimezonePlugin);
       fsStorage.set('savedTransaction', [...savedTransactions, id]);
       savedTransactions = fsStorage.get('savedTransaction') ?? [];
       logSuccessfullTransaction(statement);
+
+      const [currentFireflyBalance, currentMonobankBalance] = await Promise.all(
+        [fetchCurrentFireflyBalance(), fetchCurrentMonobankBalance()],
+      );
+      logMonobankBalance(currentMonobankBalance);
+      logFireflyBalance(currentFireflyBalance);
     } else {
       logFailedTransaction(statement, await response.json());
     }

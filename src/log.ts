@@ -62,19 +62,27 @@ export const logFailedTransaction = (
     JSON.stringify(body),
   );
 
-export const promptFrom = (): PromptDestinationAnswers => {
-  const [value, isNeedToBeSavedRaw] = prompt('Input from/save(y/n): ').split(
-    '/',
-  );
+export const promptFrom = (): PromptDestinationAnswers | null => {
+  const answer = prompt('Input from/save(y/n): ');
+  if (!answer) return null;
+  const [value, isNeedToBeSavedRaw] = answer.split('/');
   return {
     value,
     isNeedToBeSaved: isNeedToBeSavedRaw === 'y',
   };
 };
-export const promptTo = (): PromptDestinationAnswers => {
-  const [value, isNeedToBeSavedRaw] = prompt('Input to/save(y/n): ').split('/');
+export const promptTo = (): PromptDestinationAnswers | null => {
+  const answer = prompt('Input to/save(y/n): ');
+  if (!answer) return null;
+  const [value, isNeedToBeSavedRaw] = answer.split('/');
   return {
     value,
     isNeedToBeSaved: isNeedToBeSavedRaw === 'y',
   };
 };
+
+export const logMonobankBalance = (balance: number) =>
+  console.log('Monobank Balance: ', chalk.green(balance + ' ' + 'UAH'));
+
+export const logFireflyBalance = (balance: number) =>
+  console.log('Firefly Balance: ', chalk.green(balance + ' ' + 'UAH'));
