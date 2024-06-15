@@ -94,14 +94,15 @@ dayjs.extend(dayjsTimezonePlugin);
       fsStorage.set('savedTransaction', [...savedTransactions, id]);
       savedTransactions = fsStorage.get('savedTransaction') ?? [];
       logSuccessfullTransaction(statement);
-
-      const [currentFireflyBalance, currentMonobankBalance] = await Promise.all(
-        [fetchCurrentFireflyBalance(), fetchCurrentMonobankBalance()],
-      );
-      logMonobankBalance(currentMonobankBalance);
-      logFireflyBalance(currentFireflyBalance);
     } else {
       logFailedTransaction(statement, await response.json());
     }
   }
+
+  const [currentFireflyBalance, currentMonobankBalance] = await Promise.all([
+    fetchCurrentFireflyBalance(),
+    fetchCurrentMonobankBalance(),
+  ]);
+  logMonobankBalance(currentMonobankBalance);
+  logFireflyBalance(currentFireflyBalance);
 })();
